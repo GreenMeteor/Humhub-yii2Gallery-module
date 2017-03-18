@@ -1,14 +1,13 @@
 <?php
 
-namespace onmotion\gallery\models;
-
-use Yii;
+namespace humhub\modules\gallery\models;
 
 /**
  * This is the model class for table "g_photo".
  *
  * @property string $photo_id
  * @property string $gallery_id
+ * @property mixed $gallery
  * @property string $name
  */
 class GalleryPhoto extends \yii\db\ActiveRecord

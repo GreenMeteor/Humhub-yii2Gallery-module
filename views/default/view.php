@@ -2,16 +2,15 @@
 
 use kartik\file\FileInput;
 use onmotion\gallery\Gallery;
+use onmotion\helpers\Translator;
 use yii\bootstrap\Collapse;
 use yii\bootstrap\Modal;
 use yii\helpers\Html;
 use yii\helpers\Url;
-use yii\widgets\Breadcrumbs;
-use onmotion\helpers\Translator;
 
 /* @var $this yii\web\View */
-/* @var $model onmotion\gallery\models\Gallery */
-/* @var $photos onmotion\gallery\models\GalleryPhoto */
+/* @var $model humhub\modules\gallery\models\Gallery */
+/* @var $photos humhub\modules\gallery\models\GalleryPhoto */
 
 set_time_limit(60);
 ini_set('memory_limit', '512M');
@@ -64,7 +63,7 @@ JS
                 <div class="col-md-10">
                     <?php
                     if (!empty($items))
-                        echo Gallery::widget([
+                        echo humhub\modules\gallery\widgets\Gallery::widget([
                             'id' => 'gallery-links',
                             'items' => $items,
                             'pluginOptions' => [

@@ -1,10 +1,10 @@
 <?php
-use yii\helpers\Url;
-use yii\helpers\Html;
 use yii\bootstrap\Modal;
+use yii\helpers\Html;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
-/* @var $searchModel onmotion\gallery\models\GallerySearch */
+/* @var $searchModel humhub\modules\gallery\models\GallerySearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = 'Photo-gallery';

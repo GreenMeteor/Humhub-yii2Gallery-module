@@ -1,22 +1,13 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: kozhevnikov
- * Date: 31.03.2016
- * Time: 14:47
- */
 
-namespace onmotion\gallery;
+namespace humhub\modules\gallery\assets;
 
 use yii\web\AssetBundle;
 
-/**
- * Class GalleryAsset
- * @package onmotion\gallery
- */
 class OnmotionAsset extends AssetBundle
 {
-    public $sourcePath = __DIR__ . '/assets';
+    public $jsOptions = ['position'=> \yii\web\View::POS_END];
+    public $sourcePath = '@gallery/resources';
     public $css = [
         'bootstrap-fileinput-4.3.1/css/fileinput.min.css',
         'css/onmotion-gallery.css',

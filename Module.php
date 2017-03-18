@@ -1,30 +1,37 @@
 <?php
 
-namespace onmotion\gallery;
+namespace humhub\modules\gallery;
+
+use humhub\modules\space\models\Space;
 
 /**
  * gallery module definition class
  */
-class Module extends \yii\base\Module
+class Module extends \humhub\components\Module
 {
-    /**
-     * @inheritdoc
-     */
-    public $controllerNamespace = 'onmotion\gallery\controllers';
 
     /**
      * @inheritdoc
      */
-    public function init()
+    public function getName()
     {
-        parent::init();
-        $view = \Yii::$app->getView();
-        GalleryAsset::register($view);
-        OnmotionAsset::register($view);
-        //route doesn't work
-        \Yii::$app->getUrlManager()->addRules([
-            '<module:gallery>/<action>' => 'gallery/default/<action>',
-        ], false);
+        return ('Gallery');
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getPermissions($contentContainer = null)
+    {
+
+        if($contentContainer instanceof Space){
+            return [
+
+            ];
+        };
+        return [];
+
+
     }
 
 }

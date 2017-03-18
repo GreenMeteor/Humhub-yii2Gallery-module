@@ -1,24 +1,22 @@
 <?php
 
-namespace onmotion\gallery\controllers;
+namespace humhub\modules\gallery\controllers;
 
 
-use Imagick;
-use onmotion\gallery\models\Gallery;
-use onmotion\gallery\models\GalleryPhoto;
-use onmotion\gallery\models\GallerySearch;
+use humhub\components\Controller;
+use humhub\modules\gallery\models\Gallery;
+use humhub\modules\gallery\models\GalleryPhoto;
+use humhub\modules\gallery\models\GallerySearch;
 use onmotion\helpers\File;
 use onmotion\helpers\Image;
-use onmotion\helpers\ImagickExt;
 use onmotion\helpers\Translator;
 use Yii;
 use yii\base\Exception;
 use yii\base\UserException;
-use yii\web\Controller;
-use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use yii\web\Response;
 use yii\helpers\Html;
+use yii\web\NotFoundHttpException;
+use yii\web\Response;
 
 ini_set('memory_limit', '512M');
 

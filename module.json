@@ -1,0 +1,12 @@
+{
+    "id": "gallery",
+    "name": "Yii2 Gallery",
+    "description": "Gallery Module",
+    "keywords": [
+    ],
+    "version": "1.0",
+    "humhub": {
+        "minVersion": "1.2"
+    },
+    "screenshots": []
+}

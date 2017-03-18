@@ -1,8 +1,7 @@
 <?php
 
-namespace onmotion\gallery\models;
+namespace humhub\modules\gallery\models;
 
-use yii;
 use yii\db\ActiveRecord;
 
 /**
@@ -11,6 +10,7 @@ use yii\db\ActiveRecord;
  * @property string $gallery_id
  * @property string $name
  * @property string $descr
+ * @property mixed $galleryPhotos
  * @property string $date
  */
 class Gallery extends ActiveRecord

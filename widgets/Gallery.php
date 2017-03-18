@@ -6,9 +6,9 @@
  * Time: 14:44
  */
 
-namespace onmotion\gallery;
+namespace humhub\modules\gallery\widgets;
 
-use yii\base\Widget;
+use humhub\components\Widget;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Json;
