@@ -7,7 +7,7 @@ use humhub\components\Controller;
 use humhub\modules\gallery\models\Gallery;
 use humhub\modules\gallery\models\GalleryPhoto;
 use humhub\modules\gallery\models\GallerySearch;
-use onmotion\helpers\File;
+use yii\helpers\FileHelper;
 use onmotion\helpers\Image;
 use onmotion\helpers\Translator;
 use Yii;
@@ -272,7 +272,7 @@ class DefaultController extends Controller
                         try {
                             rename($oldAlias, $newAlias);
                         } catch (\Exception $e) {
-                            return('Не удалось переименовать директорию ' . $oldAlias . ' - ' . $e->getMessage());
+                            return('Could not rename directory.' . $oldAlias . ' - ' . $e->getMessage());
                         }
                     }
                     return [
@@ -283,12 +283,12 @@ class DefaultController extends Controller
                     ];
                 } else{
                     return [
-                        'title' => "Редактирование Галереи - " . $model->name,
+                        'title' => "Editing the Gallery - " . $model->name,
                         'content' => $this->renderPartial('update', [
                             'model' => $model,
                         ]),
-                        'footer' => Html::button('Закрыть', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                            Html::button('Сохранить', ['class' => 'btn btn-primary', 'type' => "submit"])
+                        'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                            Html::button('Save', ['class' => 'btn btn-primary', 'type' => "submit"])
                     ];
                 }
             }else {
@@ -297,8 +297,8 @@ class DefaultController extends Controller
                     'content' => $this->renderPartial('update', [
                         'model' => $this->findModel($id),
                     ]),
-                    'footer' => Html::button('Закрыть', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                        Html::button('Сохранить', ['class' => 'btn btn-primary', 'type' => "submit"])
+                    'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                        Html::button('Save', ['class' => 'btn btn-primary', 'type' => "submit"])
                 ];
             }
         } else {
@@ -375,7 +375,7 @@ class DefaultController extends Controller
                 unlink($dir . '/' . $photo->name);
                 unlink($dir . '/thumb/' . $photo->name);
             } catch (\Exception $e){
-                echo('Не удалось удалить файл ' . $photo->name . ' - ' . $e->getMessage());
+                echo('Could not delete file.' . $photo->name . ' - ' . $e->getMessage());
             }
         }
         GalleryPhoto::deleteAll(['photo_id' => $photoIds]);
@@ -401,7 +401,7 @@ class DefaultController extends Controller
         if (($model = Gallery::findOne($id)) !== null) {
             return $model;
         } else {
-            throw new NotFoundHttpException('Страница не найдена.');
+            throw new NotFoundHttpException('Page not found.');
         }
     }
 }
