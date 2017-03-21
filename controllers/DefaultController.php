@@ -4,12 +4,14 @@ namespace humhub\modules\gallery\controllers;
 
 
 use humhub\components\Controller;
+use humhub\modules\gallery\helpers\File;
+use humhub\modules\gallery\helpers\Image;
+use humhub\modules\gallery\helpers\Translator;
 use humhub\modules\gallery\models\Gallery;
+use humhub\modules\gallery\models\GalleryFolders;
+use humhub\modules\gallery\models\GalleryFoldersSearch;
 use humhub\modules\gallery\models\GalleryPhoto;
-use humhub\modules\gallery\models\GallerySearch;
-use onmotion\helpers\File;
-use onmotion\helpers\Image;
-use onmotion\helpers\Translator;
+use humhub\modules\gallery\models\GalleryPhotos;
 use Yii;
 use yii\base\Exception;
 use yii\base\UserException;
@@ -45,7 +47,7 @@ class DefaultController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new GallerySearch();
+        $searchModel = new GalleryFoldersSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -152,12 +154,13 @@ class DefaultController extends Controller
      */
     public function actionView($id)
     {
-
-        $photos = GalleryPhoto::find()->where(['gallery_id' => $id])->orderBy('name')->all();
+        $photos = GalleryPhotos::find()->where(['folder_id' => $id])->orderBy('title')->all();
+        $pictureModel = new GalleryPhotos();
 
         return $this->render('view', [
             'model' => $this->findModel($id),
             'photos' => $photos,
+            'photosModel' => $pictureModel,
         ]);
     }
 
@@ -170,7 +173,7 @@ class DefaultController extends Controller
     public function actionCreate()
     {
         $request = Yii::$app->request;
-        $model = new Gallery();
+        $model = new GalleryFolders();
 
         if ($request->isAjax) {
             /*
@@ -185,21 +188,11 @@ class DefaultController extends Controller
                     ]),
                 ];
             } else if ($model->load($request->post()) && $model->validate()) {
-                $model->name = Html::encode($model->name);
-                $model->date = date('Y-m-d H:i:s');
+                $model->folder_name = Html::encode($model->folder_name);
+                $model->folder_description = Html::encode($model->folder_description);
+                $model->user_id = Yii::$app->user->id;
                 if($model->save()) {
-                    $alias = Yii::getAlias('@app/web/img/gallery/' . Translator::rus2translit($model->name));
-                    try {
-                        //если создавать рекурсивно, то работает через раз хз почему.
-                        $old = umask(0);
-                        mkdir($alias, 0777, true);
-                        chmod($alias, 0777);
-                        mkdir($alias . '/thumb', 0777);
-                        chmod($alias . '/thumb', 0777);
-                        umask($old);
-                    } catch (\Exception $e){
-                        return('Не удалось создать директорию ' . $alias . ' - ' . $e->getMessage());
-                    }
+
                     return [
                         'forceReload' => true,
                         'forceClose' => true,
@@ -227,8 +220,11 @@ class DefaultController extends Controller
             /*
             *   Process for non-ajax request
             */
-            if ($model->load($request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->gallery_id]);
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                $model->user_id = Yii::$app->user->id;
+                $model->folder_name = Html::encode($model->folder_name);
+                $model->folder_description = Html::encode($model->folder_description);
+                return $this->redirect(['view', 'id' => $model->folder_id]);
             } else {
                 return $this->render('create', [
                     'model' => $model,
@@ -393,12 +389,12 @@ class DefaultController extends Controller
      * Finds the Gallery model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param string $id
-     * @return Gallery the loaded model
+     * @return GalleryFolders the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Gallery::findOne($id)) !== null) {
+        if (($model = GalleryFolders::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('Страница не найдена.');

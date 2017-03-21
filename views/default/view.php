@@ -1,22 +1,25 @@
 <?php
 
-use kartik\file\FileInput;
-use onmotion\gallery\Gallery;
-use onmotion\helpers\Translator;
-use yii\bootstrap\Collapse;
+use humhub\modules\gallery\helpers\Translator;
+use humhub\modules\gallery\widgets\Gallery;
+use humhub\widgets\ActiveForm;
 use yii\bootstrap\Modal;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
+\humhub\modules\gallery\assets\GalleryAsset::register($this);
+\humhub\modules\gallery\assets\OnmotionAsset::register($this);
+
 /* @var $this yii\web\View */
-/* @var $model humhub\modules\gallery\models\Gallery */
-/* @var $photos humhub\modules\gallery\models\GalleryPhoto */
+/* @var $model humhub\modules\gallery\models\GalleryFolders */
+/* @var $photos humhub\modules\gallery\models\GalleryPhotos */
+/* @var $photosModel humhub\modules\gallery\models\GalleryPhotos */
 
 set_time_limit(60);
 ini_set('memory_limit', '512M');
 
 $this->params['breadcrumbs'][] = ['label' => 'Gallery', 'url' => ['/gallery']];
-$this->params['breadcrumbs'][] = $model->name;
+$this->params['breadcrumbs'][] = $model->folder_name;
 
 $this->registerJs(<<<JS
 $('#preloader').show();
@@ -32,7 +35,7 @@ JS
             echo \yii\bootstrap\Collapse::widget([
                 'items' => [
                     [
-                        'label' => $model->name . ' (' . count((array)$photos) . ' photos)',
+                        'label' => $model->folder_name . ' (' . count((array)$photos) . ' photos)',
                         'content' => !empty($model->descr) ? $model->descr : ''
                     ]
                 ],
@@ -40,7 +43,7 @@ JS
                     'class' => 'header-collapse'
                 ]
             ]);
-            $galleryName = $model->name;
+            $galleryName = $model->folder_name;
 
             if (!empty($photos)) {
                 foreach ($photos as $photo) {
@@ -55,7 +58,7 @@ JS
                         ];
                 };
             } else {
-                echo 'There is no photos yet...';
+                echo 'There are no photos yet...';
             }
             ?>
             <div class="row">
@@ -63,7 +66,7 @@ JS
                 <div class="col-md-10">
                     <?php
                     if (!empty($items))
-                        echo humhub\modules\gallery\widgets\Gallery::widget([
+                        echo Gallery::widget([
                             'id' => 'gallery-links',
                             'items' => $items,
                             'pluginOptions' => [
@@ -75,19 +78,9 @@ JS
                 </div>
                 <div class="col-md-1"></div>
             </div>
-            <?php
-            echo Collapse::widget([
-                'items' => [
-                    [
-                        'label' => 'Upload photo',
-                        'content' => '<input id="input-1a" name="image[]" type="file"  class="file-loading" multiple>' .
-                            ' <div id="errorBlock"><ul class="alert-warning-message"></ul></div>'
-                    ]
-                ],
-                'options' => [
-                    'class' => 'download-collapse'
-                ]
-            ]);
+        <?php   $form = ActiveForm::begin(['action' =>['/gallery/gallery-photos-controller/create'], 'options' => ['enctype' => 'multipart/form-data']]);
+                echo $form->field($photosModel, 'picture')->fileInput();
+                ActiveForm::end();
                 echo Html::a('<i class="glyphicon glyphicon-pencil"></i>', ['#'],
                     ['title' => 'Edit mode', 'class' => 'btn btn-default', 'id' => 'check-toggle',
                         'data-toggle' => "tooltip", 'data-placement' => "top", 'data-trigger' => "hover"]);
@@ -130,11 +123,11 @@ $this->registerJs(<<<JS
 $(document).on('ready', function() {
     $("#input-1a").fileinput({
     showPreview: false,
-    uploadUrl: 'fileupload',
+    uploadUrl: 'uploads',
     uploadAsync: true,
     uploadExtraData: {
-       'gallery_id': "$model->gallery_id",
-       'gallery_name': "$model->name",
+       'gallery_id': "$model->folder_id",
+       'gallery_name': "$model->folder_name",
     },
     maxFileCount: 1000,
     allowedFileTypes: ['image'],

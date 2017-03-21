@@ -19,6 +19,5 @@ class OnmotionAsset extends AssetBundle
         'js/onmotion-gallery.js',
     ];
     public $depends = [
-        'yii\web\YiiAsset',
     ];
 }
